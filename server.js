@@ -4,6 +4,8 @@
 var express = require('express'),
     path = require('path'),
     fs = require('fs');
+var passport = require('passport');
+var flash 	 = require('connect-flash');
 
 var app = express();
 
@@ -28,6 +30,16 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
+    //for authentication
+	app.use(express.cookieParser()); // read cookies (needed for auth)
+	app.use(express.bodyParser()); // get information from html forms
+    app.set('view engine', 'ejs'); // set up ejs for templating
+
+	// required for passport
+	app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+	app.use(passport.initialize());
+	app.use(passport.session()); // persistent login sessions
+	app.use(flash()); // use connect-flash for flash messages stored in session
 });
 
 app.configure('development', function(){
