@@ -5,7 +5,7 @@ var express = require('express'),
     path = require('path'),
     fs = require('fs');
 var passport = require('passport');
-var flash 	 = require('connect-flash');
+var flash    = require('connect-flash');
 
 var app = express();
 
@@ -19,7 +19,7 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 });
 
 // Populate empty DB with dummy data
-require('./lib/db/dummydata');
+//require('./lib/db/dummydata');
 
 // Controllers
 var api = require('./lib/controllers/api');
@@ -29,7 +29,6 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(app.router);
     //for authentication
 	app.use(express.cookieParser()); // read cookies (needed for auth)
 	app.use(express.bodyParser()); // get information from html forms
@@ -51,10 +50,13 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.favicon(path.join(__dirname, 'public/favicon.ico')));
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(app.router);
 });
 
 // Routes
 app.get('/api/awesomeThings', api.awesomeThings);
+require('./app/config/passport')(passport);
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // Start server
 var port = process.env.PORT || 3000;
