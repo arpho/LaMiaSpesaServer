@@ -3,6 +3,7 @@
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
 var User			= require('../../lib/models/user');
@@ -43,7 +44,7 @@ module.exports = function(passport) {
 
 		// asynchronous
 		process.nextTick(function() {
-
+			console.log('facebook strategy');
 			// find the user in the database based on their facebook id
 	        User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
 
@@ -90,6 +91,7 @@ module.exports = function(passport) {
     },
     function(req, email, password, done){
 		process.nextTick(function(){
+			console.log('local strategy');
 			User.findOne({ 'local.email' :  email },function(err,user){
             // if there are any errors, return the error
             if (err){
@@ -127,6 +129,7 @@ module.exports = function(passport) {
         passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },function(req, email, password, done){
+			console.log('local 132');
 		User.findOne({ 'local.email' :  email },function(err,user){
 			if (err){
 				return done(err);
@@ -141,9 +144,43 @@ module.exports = function(passport) {
 			
 		});
     }));
+    // =========================================================================
+    // GOOGLE ==================================================================
+    // =========================================================================
+    
+    passport.use(new GoogleStrategy({
+
+        clientID        : '1071294086929-f3iarlh2c1saofa28f0vpbr9658fbrbj.apps.googleusercontent.com',
+        clientSecret    : 'BBcrRHwwdnIVDujEbnanH13C',
+        callbackURL     : 'http://localhost:8080/auth/google/callback'
+
+    },function(token, refreshToken, profile, done){
+		User.findOne({ 'google.id' : profile.id },  function(err, user) {
+			console.log('google strategy');
+			if(err) {
+				return done(err);
+			}
+			if(user){
+				return done(null, user);
+			} else {
+				var newUser          = new User();
+				newUser.google.id    = profile.id;
+	            newUser.google.token = token;
+	            newUser.google.name  = profile.displayName;
+	            
+	            newUser.google.email = profile.emails[0].value; // pull the first email
+	            newUser.save(function(err){
+					if(err){throw err;}
+					return done(null, newUser);
+	            });
+			} 
+			
+		});
+    }));
     
     // =========================================================================
-    // LOCAL LOGIN===================================================================
+    // GOOGLE ==================================================================
+    // =========================================================================
     
 
 };

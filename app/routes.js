@@ -1,4 +1,4 @@
-module.exports = function(app, passport) {
+module.exports = function(app, passport,neo) {
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -56,6 +56,8 @@ module.exports = function(app, passport) {
 	// =====================================
 	// route for facebook authentication and login
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+	
+	
 
 	// handle the callback after facebook has authenticated the user
 	app.get('/auth/facebook/callback',
@@ -63,6 +65,21 @@ module.exports = function(app, passport) {
 			successRedirect : '/profile',
 			failureRedirect : '/'
 		}));
+		
+	// =====================================
+	// GOOGLE ROUTES =======================
+	// =====================================
+	// send to google to do the authentication
+	// profile gets us their basic information including their name
+	// email gets their emails
+    app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+    
+    // the callback after google has authenticated the user
+    app.get('/auth/google/callback',
+            passport.authenticate('google', {
+                    success : '/profile',
+                    failureRedirect : '/'
+            }));
 
 	// =====================================
 	// LOGOUT ==============================
@@ -70,6 +87,58 @@ module.exports = function(app, passport) {
 	app.get('/logout', function(req, res) {
 		req.logout();
 		res.redirect('/');
+	});
+
+	// =====================================
+	// LOOKING_ITEM ==============================
+	// =====================================
+	
+	app.get('/get_item',function(req,res){
+		var upc_number = req.query.upc;
+		//console.log(upc_number);
+		var query = "MATCH (i:lms_item{number:'"+upc_number+"'}) RETURN i";
+        //var Item = {itemname:'item non presente',description:'item non ancora presente nel nostro database'};
+		neo.cypherQuery(query,function(err,item){
+			if(err){throw err;}
+			else{
+				//console.log(item);
+				var query = "MATCH (i:lms_item{number:'"+upc_number+"'})-[lms_visualizes]-(p:lms_picture) RETURN p";
+				neo.cypherQuery(query,function(err,pics){
+					if(err){throw err;}
+					else{
+						//console.log(pics.data[0].data.name);
+						item.pictures = pics.data;
+                        if (pics.data.length>0){
+                            item.data[0].data.pictures = pics.data[0].data.name;
+                        }
+                        //Item = item.data[0].data;
+                          console.log('########################################################################################################################################');
+                          console.log('looked for '+upc_number);
+                          console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                        
+						//console.log(pics.data.length);
+                        if(item.data.length>0){
+                            var Item = item.data[0].data
+						  res.json();
+                        }
+                        else{
+                            var Item = {itemname:'not found',description:'item not present in our db'};
+                        }
+                        res.json(Item);
+                        console.log("answer sent:");
+                        console.log(Item);
+						//res.redirect('pictures.ejs',item);
+				
+						}
+				});
+				}
+		});
+	});
+	app.get('/api/looking_item',function(req,res){
+		var upc_number = req.query.upc,
+		http = require('http');
+		res.json(require('./scripts/server/upcRequest')(http,upc_number));
+		//res.send(req);
 	});
 };
 

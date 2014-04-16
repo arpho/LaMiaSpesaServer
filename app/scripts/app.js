@@ -11,6 +11,9 @@ angular.module('laMiaSpesaServerApp', [
       .when('/', {
         templateUrl: 'views/login.html',
         controller: 'MainCtrl'
+      }).when('/#/looking_item',{
+		templateUrl: 'views/looking_item.html',
+		controller: 'LookingItemCtrl'
       })
       .otherwise({
         redirectTo: '/'

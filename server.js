@@ -6,7 +6,8 @@ var express = require('express'),
     fs = require('fs');
 var passport = require('passport');
 var flash    = require('connect-flash');
-
+var neo4j = require('node-neo4j'),
+neo = new neo4j('http://localhost:7474');
 var app = express();
 
 // Connect to database
@@ -23,12 +24,14 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 
 // Controllers
 var api = require('./lib/controllers/api');
-
 // Express Configuration
 app.configure(function(){
+    app.use('/media', express.static(__dirname + '/media'));
+    app.use(express.static(__dirname + '/public'));
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
+	//app.use( express.static( "public" ) );
     //for authentication
 	app.use(express.cookieParser()); // read cookies (needed for auth)
 	app.use(express.bodyParser()); // get information from html forms
@@ -49,17 +52,21 @@ app.configure('development', function(){
 
 app.configure('production', function(){
   app.use(express.favicon(path.join(__dirname, 'public/favicon.ico')));
-  app.use(express.static(path.join(__dirname, 'public')));
+  //app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(__dirname + '/public'));
   app.use(app.router);
 });
 
 // Routes
 app.get('/api/awesomeThings', api.awesomeThings);
 require('./app/config/passport')(passport);
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, passport,neo); // load our routes and pass in our app and fully configured passport
 
 // Start server
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8080;
 app.listen(port, function () {
   console.log('Express server listening on port %d in %s mode', port, app.get('env'));
+  console.log('########################################################################################################################################');
+  console.log(path.join(__dirname, 'public'));
+  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 });
