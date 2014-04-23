@@ -1,4 +1,4 @@
-module.exports = function(app, passport,neo) {
+module.exports = function(app, passport,neo,db) {
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -94,50 +94,13 @@ module.exports = function(app, passport,neo) {
 	// =====================================
 	
 	app.get('/get_item',function(req,res){
-		var upc_number = req.query.upc;
-		//console.log(upc_number);
-		var query = "MATCH (i:lms_item{number:'"+upc_number+"'}) RETURN i";
-        //var Item = {itemname:'item non presente',description:'item non ancora presente nel nostro database'};
-		neo.cypherQuery(query,function(err,item){
-			if(err){throw err;}
-			else{
-				//console.log(item);
-				var query = "MATCH (i:lms_item{number:'"+upc_number+"'})-[lms_visualizes]-(p:lms_picture) RETURN p";
-				neo.cypherQuery(query,function(err,pics){
-					if(err){throw err;}
-					else{
-						//console.log(pics.data[0].data.name);
-						item.pictures = pics.data;
-                        if (pics.data.length>0){
-                            item.data[0].data.pictures = pics.data[0].data.name;
-                        }
-                        //Item = item.data[0].data;
-                          console.log('########################################################################################################################################');
-                          console.log('looked for '+upc_number);
-                          console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-                        
-						//console.log(pics.data.length);
-                        if(item.data.length>0){
-                            var Item = item.data[0].data
-						  res.json();
-                        }
-                        else{
-                            var Item = {itemname:'not found',description:'item not present in our db'};
-                        }
-                        res.json(Item);
-                        console.log("answer sent:");
-                        console.log(Item);
-						//res.redirect('pictures.ejs',item);
-				
-						}
-				});
-				}
-		});
-	});
-	app.get('/api/looking_item',function(req,res){
-		var upc_number = req.query.upc,
-		http = require('http');
-		res.json(require('./scripts/server/upcRequest')(http,upc_number));
+        require('./scripts/routing/get_item').route2(req,res,db);
+    });
+	app.get('/api/looking_item',function(req,res){ // just for testing and developement
+		//var upc_number = req.query.upc,
+		//http = require('http');
+        require('./scripts/server/upcRequest').digit8_request(req,res);
+		//res.json(require('./scripts/server/upcRequest')(http,upc_number));
 		//res.send(req);
 	});
 };

@@ -6,8 +6,10 @@ var express = require('express'),
     fs = require('fs');
 var passport = require('passport');
 var flash    = require('connect-flash');
-var neo4j = require('node-neo4j'),
-neo = new neo4j('http://localhost:7474');
+var neo = require('neo4j');
+var db = new neo.GraphDatabase('http://localhost:7474');
+//var db = new neo4j.GraphDatabase('http://localhost:7474');
+var neoDb = new neo.GraphDatabase('http://localhost:7474');
 var app = express();
 
 // Connect to database
@@ -60,7 +62,7 @@ app.configure('production', function(){
 // Routes
 app.get('/api/awesomeThings', api.awesomeThings);
 require('./app/config/passport')(passport);
-require('./app/routes.js')(app, passport,neo); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, passport,neo,neoDb); // load our routes and pass in our app and fully configured passport
 
 // Start server
 var port = process.env.PORT || 8080;
