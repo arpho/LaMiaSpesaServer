@@ -37,7 +37,7 @@ exports.doRequest = function(url,next){
         if (err) { console.log('error');
             throw err;}
         else{
-            console.log('callback');
+            console.log('callback di dorequest');
             next(res);
             }
     })

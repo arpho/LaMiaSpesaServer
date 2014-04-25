@@ -10,8 +10,12 @@ exports.route2 = function(req,res,db){
         var params = {upc:upc_number};
     //cerchiamo lo item nel db
     db.query(query,params,function(err,item){
-        if (err){throw err;}
+        if (err){
+            console.log('errore');
+            throw err;}
         else{
+            console.info('callback query db item');
+            console.info(item);
             if (item.length>0){
                 var Item = item[0].i._data.data;
                 console.log('item in db');
@@ -24,33 +28,33 @@ exports.route2 = function(req,res,db){
                                 'WHERE i.number  = {upc}',
                                 'RETURN p'
             ].join('\n');
+                console.info('query db for picture');
+                console.info(query);
             db.query(query,params,function(err,pics){
                         if(err){throw err;}
                         else{
 							if(pics.length>0){
 	                            //console.log(pics.data[0].data.name);
 	                            //res.send(pics);
-	                            console.log('pics');
+	                            console.log('pics[0].p._data.data.name');
 	                            //console.log(pics);
 	                            //console.log(pics[0]);
 	                            //console.log(pics[0].p);
-	                            console.log(pics[0].p._data.data);
+	                            console.log(pics[0].p._data.data.name);
 	                            //Item.pictures = pics.data[0].data.name;
-	                            /*if (pics.data.length>0){
-	                                item.data[0].data.pictures = pics.data[0].data.name;
-	                            }*/
 	                            //Item = item.data[0].data;
-	                              console.log('########################################################################################################################################');
-	                              console.log('looked for pictures for  '+upc_number);
-	                              console.log('found: '+pics[0].p._data.data.name);
 	                              Item.pictures = pics[0].p._data.data.name;
-	                              console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                                  Item.source = 1; //sorgente 1 our db, 2 digit-eyes
 								console.log('item returned');
+                                Item.return_code ='0';
 								console.log(Item);
 								res.json(Item);
 							}
 							else{ // no pictures for the item
 								console.log('no pictures');
+                                console.log('item sent:');
+                                Item.return_code = '0'; // 
+                                console.log(Item);
 								res.json(Item);
 								 }
                         }
