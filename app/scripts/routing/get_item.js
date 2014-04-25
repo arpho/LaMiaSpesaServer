@@ -1,7 +1,10 @@
 
 exports.route2 = function(req,res,db){
+        console.log('***********************************************************************************************');
+        console.log(new Date());
+        console.log('mew request');
 		var upc_number = req.query.upc;
-        console.log('upc: '+upc_number);
+        console.log('looking for: '+upc_number);
         var query = [
         'MATCH (i:lms_item)',
         'WHERE i.number  = {upc}',
@@ -49,6 +52,9 @@ exports.route2 = function(req,res,db){
                                 Item.return_code ='0';
 								console.log(Item);
 								res.json(Item);
+                                console.log('item found in our db with picture');
+                                console.log('***********************************************************************************************');
+                                
 							}
 							else{ // no pictures for the item
 								console.log('no pictures');
@@ -56,6 +62,8 @@ exports.route2 = function(req,res,db){
                                 Item.return_code = '0'; // 
                                 console.log(Item);
 								res.json(Item);
+                                console.log('item found in our db with no picture');
+                                console.log('***********************************************************************************************');
 								 }
                         }
                     });

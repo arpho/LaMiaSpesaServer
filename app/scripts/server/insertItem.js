@@ -5,9 +5,9 @@
 if the param is null or undfined return '' otherwise return the value*/
 var sanitize = function(v){
     var out = v;
-    if (typeof(v)=='object' || typeof(v)=='undefined'){out = '';}
+    if (typeof(v)==='object' || typeof(v)=='undefined'){out = '';}
     return out;
-    }
+   };
 module.exports = function(req,res,result,db){
     console.log('new item');
                     var upc_number = req.query.upc,
@@ -15,12 +15,12 @@ module.exports = function(req,res,result,db){
                         query,params;
                    res.send(result.body); 
                     console.info(item);
-                    if(item.return_code!='999')
-                    { console.log('found item in digit8');
-                    if (item.image!=null){
+                    if(item.return_code!='999'&& item.return_code!='995')
+                    { console.log('item  found  in digit8');
+                    if (item.image!==null){
                         console.log("scarico l'immagine");
-                        var imageUrl = item.image;
-                            var imageName = require("crypto")
+                        var imageUrl = item.image,
+                            imageName = require("crypto")
                               .createHash("md5")
                               .update(imageUrl)
                               .digest("hex")+'.'+ imageUrl.slice(-3);  // aggiungo l'estensione del file
@@ -39,12 +39,14 @@ module.exports = function(req,res,result,db){
                                         item.pictures = imageName;
                                         item.return_code = '0'; 
                                         item.source = 3; // 1: our db, 2: digit-8, 3: digit-8 with pics
-                                        console.info('item sent');
+                                        console.info('item sent at 42');
                                         console.info(item);
                                         res.json(item);
+                                console.log('item found in our digit-8 with  picture');
+                                console.log('***********************************************************************************************');
                                     });
                                     file.on('error',function(err){console.error(err);});
-                                })
+                                });
                                 }; //eof download
                             download(imageUrl,dest); // scarico l'immagine
                         query = [ // creo il nodo dell'item il nodo dell'immagine e la loro relazione
@@ -77,14 +79,19 @@ module.exports = function(req,res,result,db){
                                         dbItem.return_code = '0';
                                         dbItem.source = 2;
                                         res.json(dbItem);
+                                console.log('item found digit-8 db with no picture');
+                                console.log('***********************************************************************************************');
                                     }
                                  });
                     } // eof  no item in  digit-eyes
                     else
-                    {   var out = {itemname:'not found',description:'new Item',return_code:'999'};
+                    {   console.log('item not found');
+                        var out = {itemname:'not found',description:'new Item',return_code:'999'};
                         res.json(out);
                         console.log('item sent back');
                         console.log(out);
+                        console.log('item not found');
+                        console.log('***********************************************************************************************');
                     }
                         };// eof function
                                                                                        
