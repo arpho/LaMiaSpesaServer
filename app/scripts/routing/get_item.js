@@ -58,7 +58,7 @@ exports.route2 = function(req,res,db){
 							}
 							else{ // no pictures for the item
 								console.log('no pictures');
-                                console.log('item sent:');
+                                console.log('item sent at 61:');
                                 Item.return_code = '0'; // 
                                 console.log(Item);
 								res.json(Item);

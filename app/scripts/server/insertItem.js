@@ -13,8 +13,8 @@ module.exports = function(req,res,result,db){
                     var upc_number = req.query.upc,
                     item = result.body,
                         query,params;
-                   res.send(result.body); 
-                    console.info(item);
+                   //res.send(result.body); 
+                   // console.info(item);
                     if(item.return_code!='999'&& item.return_code!='995')
                     { console.log('item  found  in digit8');
                     if (item.image!==null){
@@ -87,11 +87,24 @@ module.exports = function(req,res,result,db){
                     else
                     {   console.log('item not found');
                         var out = {itemname:'not found',description:'new Item',return_code:'999'};
-                        res.json(out);
+                        var query = "create (i:lms_item {itemname:'new item',description:'Item not found',number:{upc},ratingsup:0,ratingsdown:0}) return i, id(i) as id",
+                            params = {upc:upc_number};
+                        db.query(query,params,function(err,item){
+                            if (err){throw err;}
+                            else{
+                                 var Item = item[0].i.data;
+                                Item.return_code='999';
+                                 console.log('item stored in db');
+                                 console.log(Item);
+                                Item.id = item[0].id;
+                        res.json(Item);
                         console.log('item sent back');
-                        console.log(out);
-                        console.log('item not found');
-                        console.log('***********************************************************************************************');
+                        console.log(Item);
+                        console.log('item not found, created new item in our db');
+                        console.log('id item');
+                        console.log(item[0].id);
+                        console.log('***********************************************************************************************');}
+                        })
                     }
                         };// eof function
                                                                                        
