@@ -92,7 +92,7 @@ module.exports = function(app, passport,neo,db) {
 	// =====================================
 	// LOOKING_ITEM ==============================
 	// =====================================
-	
+	app.get('/get_weighed',function(req,res){require('./scripts/routing/weighed').route(req,res);});
 	app.get('/get_item',function(req,res){
         require('./scripts/routing/get_item').route2(req,res,db);
     });
