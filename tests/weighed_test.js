@@ -18,8 +18,6 @@ var request = require('superagent');
 test('broccoletti esse ',function(t){
     var url = "http://localhost:8080/get_weighed?upc=2047960000822";
     request.get(url).end(function(err,res){
-        console.log('res.body');
-        console.log(res.body);
         t.equal(res.body.error,0,"no errori");
         t.equal(res.body.upc,"2047960000822","upc");
         t.equal(res.body.store,'04','store');
@@ -30,8 +28,6 @@ test('broccoletti esse ',function(t){
 test('cipollotti bianchi esse ',function(t){
     var url = "http://localhost:8080/get_weighed?upc=2047460000391";
     request.get(url).end(function(err,res){
-        console.log('res.body');
-        console.log(res.body);
         t.equal(res.body.error,0,"no errori");
         //t.equal(res.body.upc,"2047960000822","upc");
         t.equal(res.body.store,'04','store');
@@ -83,3 +79,19 @@ test("testing priceExtractor",function(t){
     t.equal(priceExtractor('10000'),100,'centinaia');
     t.end();
 })
+
+/*
+test('ananas ',function(t){
+    var url = "http://localhost:8080/get_weighed?upc=2130057002820&toInsert=true";
+    request.get(url).end(function(err,res){
+        console.log('res.body');
+        console.log(res.body);
+        t.equal(res.body.error,0,"no errori");
+        //t.equal(res.body.upc,"2047960000822","upc");
+        t.equal(res.body.store,'13','store');
+        t.equal(res.body.price,2.82,'price');
+        t.notEqual('undefined',typeof(res.body.id));
+        t.end();
+    })
+});*/
+

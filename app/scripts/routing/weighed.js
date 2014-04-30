@@ -14,9 +14,35 @@ estrae il prezzo dalla stringa upc
     
     return price;
 }
-exports.route = function(req,res){
-    var upc = req.query.upc;
-    var store = upc.substr(1,2),
+exports.route = function(req,res,db){
+    var upc = req.query.upc,
+        toInsert = req.query.toInsert,
+    store = upc.substr(1,2),
         price = upc.substr(7);
-    res.json({message:'request processed',error:0,upc:upc,store:store,price:priceExtractor(price)});
+    if (toInsert){
+        var query = [
+            "create (i:lms_item:lms_weighed ",
+            "{price:{price},",
+            "store:{store},",
+            "date:{date}}) ",
+            "return i,id(i) as id"].join('\n'),
+        params = {price:priceExtractor(price),store:store,date:new Date()};
+    console.log("inserting new weighed item");
+    db.query(query,params,function(err,item){
+        if (err) {throw err}
+        else{
+           var out = item[0].i.data;
+            out.id = item[0].id;
+            console.log(item[0].i);
+            out.error = 0;
+            console.log("json sent back:");
+            console.log(out);
+            res.json(out);
+        }
+    })
+}
+    else{
+        console.log("item not stored");
+        res.json({message:'request processed',error:0,upc:upc,store:store,price:priceExtractor(price)});}
+    
 };
