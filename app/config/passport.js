@@ -6,11 +6,14 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
-var User			= require('../../lib/models/user');
+//var User			= require('../../lib/models/user');
+
 // load the auth variables
 var configAuth = require('./auth');
 
-module.exports = function(passport) {
+module.exports = function(passport,db) {
+    var user            = require('../../lib/models/neo4j/user').user,
+    User = new user(db)  // instanzio lo user di neo4j
 
 	// used to serialize the user for the session
     passport.serializeUser(function(user, done) {
@@ -19,7 +22,7 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        User.methods.findById(id, function(err, user) {
             done(err, user);
         });
     });

@@ -61,14 +61,11 @@ app.configure('production', function(){
 
 // Routes
 app.get('/api/awesomeThings', api.awesomeThings);
-require('./app/config/passport')(passport);
+require('./app/config/passport')(passport,neoDb);
 require('./app/routes.js')(app, passport,neo,neoDb); // load our routes and pass in our app and fully configured passport
 
 // Start server
 var port = process.env.PORT || 8080;
 app.listen(port, function () {
   console.log('Express server listening on port %d in %s mode', port, app.get('env'));
-  console.log('########################################################################################################################################');
-  console.log(path.join(__dirname, 'public'));
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 });
