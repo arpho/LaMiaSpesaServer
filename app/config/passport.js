@@ -12,16 +12,19 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var configAuth = require('./auth');
 
 module.exports = function(passport,db) {
-    var user            = require('../../lib/models/neo4j/user').user,
+    var user            = require('../../lib/models/neo4j').user,
     User = new user(db)  // instanzio lo user di neo4j
 
 	// used to serialize the user for the session
     passport.serializeUser(function(user, done) {
+        console.log('serializing: ');
+        console.log(user)
         done(null, user.id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
+        //console.log('deserializing: '+user);
         User.methods.findById(id, function(err, user) {
             done(err, user);
         });
@@ -49,7 +52,9 @@ module.exports = function(passport,db) {
 		process.nextTick(function() {
 			console.log('facebook strategy');
 			// find the user in the database based on their facebook id
-	        User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+            /*console.log("facebook strategy profile")
+            console.log(profile);*/
+	        User.methods.findFb( profile.id , function(err, user) {
 
 				// if there is an error, stop everything and return that
 				// ie an error connecting to the database
@@ -61,22 +66,36 @@ module.exports = function(passport,db) {
 	                return done(null, user); // user found, return that user
 	            } else {
 	                // if there is no user found with that facebook id, create them
-	                var newUser            = new User();
+	                var newUser            = {};
 
 					// set all of the facebook information in our user model
-	                newUser.facebook.id    = profile.id; // set the users facebook id	                
+                    profile.token = token;
+                    console.log("no user so creating it")
+                    // save our user to the database
+                    var fbUser = {}
+                    fbUser.fb_id = profile.id
+                    fbUser.token = token;
+                    fbUser.hometown = profile._json.hometown.name;
+                    fbUser.location = profile._json.location.name;
+                    fbUser.username = profile.username;
+                    fbUser.email = profile.emails[0].value;// just the first one
+                    fbUser.gender = profile.gender;
+                    fbUser.name = profile.name.givenName;
+                    fbUser.familyName = profile.name.familyName;
+                    User.methods.createUser(fbUser,function(err,newUser){
+                        if (err) throw err;
+                        else{
+                           /* console.log('callback create user')
+                            console.log(newUser)*/
+                        }
+                    })
+	                /*newUser.facebook.id    = profile.id; // set the users facebook id	                
 	                newUser.facebook.token = token; // we will save the token that facebook provides to the user	                
 	                newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-	                newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
+	                newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first*/
 
-					// save our user to the database
-	                newUser.save(function(err) {
-	                    if (err){
-	                        throw err;
-						}
-	                    // if successful, return the new user
-	                    return done(null, newUser);
-	                });
+					
+	                
 	            }
 
 	        });
@@ -94,24 +113,32 @@ module.exports = function(passport,db) {
     },
     function(req, email, password, done){
 		process.nextTick(function(){
-			console.log('local strategy');
-			User.findOne({ 'local.email' :  email },function(err,user){
+			console.log('local strategy for: '+email);
+			User.methods.findOne(email,function(err,user){
             // if there are any errors, return the error
             if (err){
                 return done(err);
                }
             // check to see if theres already a user with that email
             if (user) {
+                console.log('mail già presente')
+                console.log(user);
+                req.flash('signupMessage', 'That email is already taken.')
 				return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
             }
             else{
-				// if there is no user with that email
                 // create the user
-                var newUser = new User();
-                newUser.local.email    = email;
-                newUser.local.password = newUser.generateHash(password);
-                newUser.save(function(err) {
+                var newUser = {};
+                newUser.email    = email;
+                newUser.password = User.methods.generateHash(password);
+                console.log("creating newuser")
+                console.log(newUser)
+                User.methods.createUser(newUser,function(err,id) {
 					if (err){ throw err;}
+                    console.log(id)
+                    newUser.id = id;
+                    console.log('user created')
+                    console.log(newUser);
                     return done(null, newUser);	
 				});
 
@@ -132,15 +159,17 @@ module.exports = function(passport,db) {
         passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },function(req, email, password, done){
-			console.log('local 132');
-		User.findOne({ 'local.email' :  email },function(err,user){
+		User.methods.findOne(email,function(err,user){
 			if (err){
 				return done(err);
+                console.log('findone error')
 				}
 			if (!user)
-				{return done(null, false, req.flash('loginMessage', 'No user found.'));}
-			if (!user.validPassword(password))
-				{return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));}
+				{   console.log("findone no user")
+                    return done(null, false, req.flash('loginMessage', 'No user found.'));}
+			if (!User.methods.validPassword(password))
+				{   console.log("findone si user")
+                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));}
 			// all is well, return successful user
             return done(null, user);
 
