@@ -10,7 +10,9 @@
     "bcrypt-nodejs": "0.0.3",
     "superagent": "~0.17.0",
     "connect-cache-control": "~0.1.0",
-    "crypto": "0.0.3"
+    "crypto": "0.0.3",
+    "passport-http-bearer": "~1.0.1",
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

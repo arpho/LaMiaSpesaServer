@@ -1,13 +1,13 @@
 'use strict';
 
 // Module dependencies.
+var flash    = require('connect-flash');
 var express = require('express'),
     path = require('path'),
     fs = require('fs');
 var passport = require('passport');
-var flash    = require('connect-flash');
 var neo = require('neo4j');
-var db = new neo.GraphDatabase('http://localhost:7474');
+//var db = new neo.GraphDatabase('http://localhost:7474');
 //var db = new neo4j.GraphDatabase('http://localhost:7474');
 var neoDb = new neo.GraphDatabase('http://localhost:7474');
 var app = express();
@@ -40,10 +40,10 @@ app.configure(function(){
     app.set('view engine', 'ejs'); // set up ejs for templating
 
 	// required for passport
+	app.use(flash()); // use connect-flash for flash messages stored in session
 	app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions
-	app.use(flash()); // use connect-flash for flash messages stored in session
 });
 
 app.configure('development', function(){

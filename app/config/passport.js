@@ -4,6 +4,7 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
 
 // load up the user model
 //var User			= require('../../lib/models/user');
@@ -52,8 +53,8 @@ module.exports = function(passport,db) {
 		process.nextTick(function() {
 			console.log('facebook strategy');
 			// find the user in the database based on their facebook id
-            /*console.log("facebook strategy profile")
-            console.log(profile);*/
+            /*console.log("facebook strategy profile")*/
+            console.log(profile);
 	        User.methods.findFb( profile.id , function(err, user) {
 
 				// if there is an error, stop everything and return that
@@ -103,6 +104,11 @@ module.exports = function(passport,db) {
 
     }));
     // =========================================================================
+    // bearer===================================================================
+    // =========================================================================
+    
+    passport.use('api-login',new BearerStrategy({},function(token,done){}))
+    // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================
     passport.use('local-signup',new LocalStrategy({
@@ -123,7 +129,7 @@ module.exports = function(passport,db) {
             if (user) {
                 console.log('mail già presente')
                 console.log(user);
-                req.flash('signupMessage', 'That email is already taken.')
+//                req.session.message('signupMessage', 'That email is already taken.')
 				return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
             }
             else{
@@ -131,13 +137,13 @@ module.exports = function(passport,db) {
                 var newUser = {};
                 newUser.email    = email;
                 newUser.password = User.methods.generateHash(password);
-                console.log("creating newuser")
+                console.log("creating local newuser")
                 console.log(newUser)
                 User.methods.createUser(newUser,function(err,id) {
 					if (err){ throw err;}
                     console.log(id)
                     newUser.id = id;
-                    console.log('user created')
+                    console.log('local user created')
                     console.log(newUser);
                     return done(null, newUser);	
 				});
@@ -160,6 +166,14 @@ module.exports = function(passport,db) {
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },function(req, email, password, done){
 		User.methods.findOne(email,function(err,user){
+            console.log('callback findone in passport')
+            console.log(user)
+            console.log('password')
+            console.log("user_id")
+            var our_token 
+            User.methods.set_token(function(token){console.log("created token:");
+                                                   console.log(token);
+                                                  })
 			if (err){
 				return done(err);
                 console.log('findone error')
@@ -169,7 +183,8 @@ module.exports = function(passport,db) {
                     return done(null, false, req.flash('loginMessage', 'No user found.'));}
 			if (!User.methods.validPassword(password))
 				{   console.log("findone si user")
-                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));}
+                    console.log("user")
+                    return done(null, false, req.flash('wrong password'));}
 			// all is well, return successful user
             return done(null, user);
 
