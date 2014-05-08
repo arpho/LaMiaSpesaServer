@@ -1,0 +1,557 @@
+[4mRunning "server" task[24m
+
+[4mRunning "clean:server" (clean) task[24m
+Cleaning .tmp...[32mOK[39m
+
+[4mRunning "concurrent:server" (concurrent) task[24m
+    
+    [4mRunning "copy:styles" (copy) task[24m
+    
+    
+    [32mDone, without errors.[39m
+    
+    
+    Execution Time (2014-04-14 14:30:34 UTC)
+    loading tasks  11ms  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 33%
+    copy:styles    20ms  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 61%
+    Total 33ms
+        
+    [4mRunning "coffee:dist" (coffee) task[24m
+    
+    [32mDone, without errors.[39m
+    
+    
+    Execution Time (2014-04-14 14:30:35 UTC)
+    loading tasks  10ms  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 30%
+    coffee:dist    21ms  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 64%
+    Total 33ms
+        
+    [4mRunning "compass:server" (compass) task[24m
+    [32mdirectory[0m .tmp/styles/ 
+    [31m[0m[32m   create[0m .tmp/styles/main.css (2.537s)
+    Compilation took 2.54s
+    
+    [32mDone, without errors.[39m
+    
+    
+    Execution Time (2014-04-14 14:30:34 UTC)
+    compass:server  3.2s  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 99%
+    Total 3.2s
+    
+[4mRunning "autoprefixer:dist" (autoprefixer) task[24m
+Prefixed file ".tmp/styles/main.css" created.
+
+[4mRunning "express:dev" (express) task[24m
+[36mStarting [39mbackground Express server
+Express server listening on port 8080 in development mode
+
+[4mRunning "open:server" (open) task[24m
+Successfully connected to: mongodb://localhost/LaMiaSpesaServer
+
+[4mRunning "watch" task[24m
+Waiting...[90mGET / [36m304 [90m27ms[0m
+[90mGET /bower_components/jquery/jquery.js [36m304 [90m59ms[0m
+[90mGET /bower_components/angular/angular.js [36m304 [90m56ms[0m
+[90mGET /bower_components/sass-bootstrap/js/affix.js [36m304 [90m55ms[0m
+[90mGET /bower_components/sass-bootstrap/js/alert.js [36m304 [90m16ms[0m
+[90mGET /bower_components/sass-bootstrap/js/button.js [36m304 [90m7ms[0m
+[90mGET /bower_components/sass-bootstrap/js/carousel.js [36m304 [90m4ms[0m
+[90mGET /styles/main.css [32m200 [90m88ms - 398.1kb[0m
+[90mGET /bower_components/sass-bootstrap/js/transition.js [36m304 [90m11ms[0m
+[90mGET /bower_components/sass-bootstrap/js/collapse.js [36m304 [90m9ms[0m
+[90mGET /bower_components/sass-bootstrap/js/dropdown.js [36m304 [90m8ms[0m
+[90mGET /bower_components/sass-bootstrap/js/modal.js [36m304 [90m8ms[0m
+[90mGET /bower_components/sass-bootstrap/js/scrollspy.js [36m304 [90m7ms[0m
+[90mGET /bower_components/sass-bootstrap/js/tab.js [36m304 [90m19ms[0m
+[90mGET /bower_components/sass-bootstrap/js/tooltip.js [36m304 [90m16ms[0m
+[90mGET /bower_components/sass-bootstrap/js/popover.js [36m304 [90m15ms[0m
+[90mGET /bower_components/angular-resource/angular-resource.js [36m304 [90m14ms[0m
+[90mGET /bower_components/angular-cookies/angular-cookies.js [36m304 [90m12ms[0m
+[90mGET /bower_components/angular-sanitize/angular-sanitize.js [36m304 [90m15ms[0m
+[90mGET /bower_components/angular-route/angular-route.js [36m304 [90m16ms[0m
+[90mGET /scripts/app.js [36m304 [90m15ms[0m
+[90mGET /scripts/controllers/main.js [36m304 [90m14ms[0m
+[90mGET /scripts/controllers/looking.js [36m304 [90m11ms[0m
+[90mGET /scripts/services/createDialog.js [36m304 [90m9ms[0m
+[90mGET /scripts/directives/look4Item.js [36m304 [90m8ms[0m
+[90mGET /views/login.html [36m304 [90m2ms[0m
+[90mGET /api/awesomeThings [36m304 [90m16ms[0m
+[90mGET /auth/facebook [36m302 [90m12ms - 412b[0m
+facebook strategy
+[90mGET /auth/facebook/callback?code=AQD8FzTjkPqc5yoci_PJVPnjH3wN3PwotLaXkkXFGdfpvrRzVSlJfAnwbbB05OtsCQuLBtAPO6vtOMh8o0_ELO7-OHDNtlT0zhmSDkuy0ix0a8r1azK2HduNdgu31VBELwrt77AsHjAvV-aWq6g5WruhrvrihGffouAYwGjsO8hltZN0juPcNkKSSHAHQLRXqvu8NTl417WWnkCYVBmPXKBflekvUqvcYvvqi-u4XtDiXrYqc5iV-7ksFcPrJ7C_CWv8emi9UfOWvFHlMqy5Fjz22bU32RCPrNnyMnDPZBjqZLA2oYm3mD0j0mVSFxc2PHs [36m302 [90m633ms - 72b[0m
+[90mGET /profile [36m304 [90m31ms[0m
+http://upcdatabase.org/api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845
+upc request 
+[90mGET /api/looking_item?upc=4006040023845 [32m200 [90m9ms[0m
+got response
+###########################################################################################
+{ _readableState: 
+   { highWaterMark: 16384,
+     buffer: [],
+     length: 0,
+     pipes: null,
+     pipesCount: 0,
+     flowing: false,
+     ended: false,
+     endEmitted: false,
+     reading: false,
+     calledRead: false,
+     sync: true,
+     needReadable: false,
+     emittedReadable: false,
+     readableListening: false,
+     objectMode: false,
+     defaultEncoding: 'utf8',
+     ranOut: false,
+     awaitDrain: 0,
+     readingMore: false,
+     decoder: null,
+     encoding: null },
+  readable: true,
+  domain: null,
+  _events: { end: [Function: responseOnEnd] },
+  _maxListeners: 10,
+  socket: 
+   { _connecting: false,
+     _handle: 
+      { fd: 22,
+        writeQueueSize: 0,
+        owner: [Circular],
+        onread: [Function: onread],
+        reading: true },
+     _readableState: 
+      { highWaterMark: 16384,
+        buffer: [],
+        length: 0,
+        pipes: null,
+        pipesCount: 0,
+        flowing: false,
+        ended: false,
+        endEmitted: false,
+        reading: true,
+        calledRead: true,
+        sync: false,
+        needReadable: true,
+        emittedReadable: false,
+        readableListening: false,
+        objectMode: false,
+        defaultEncoding: 'utf8',
+        ranOut: false,
+        awaitDrain: 0,
+        readingMore: false,
+        decoder: null,
+        encoding: null },
+     readable: true,
+     domain: null,
+     _events: 
+      { end: [Object],
+        finish: [Function: onSocketFinish],
+        _socketEnd: [Function: onSocketEnd],
+        free: [Function],
+        close: [Object],
+        agentRemove: [Function],
+        drain: [Function: ondrain],
+        error: [Function: socketErrorListener] },
+     _maxListeners: 10,
+     _writableState: 
+      { highWaterMark: 16384,
+        objectMode: false,
+        needDrain: false,
+        ending: false,
+        ended: false,
+        finished: false,
+        decodeStrings: false,
+        defaultEncoding: 'utf8',
+        length: 0,
+        writing: false,
+        sync: false,
+        bufferProcessing: false,
+        onwrite: [Function],
+        writecb: null,
+        writelen: 0,
+        buffer: [] },
+     writable: true,
+     allowHalfOpen: false,
+     onend: [Function: socketOnEnd],
+     destroyed: false,
+     errorEmitted: false,
+     bytesRead: 546,
+     _bytesDispatched: 120,
+     _pendingData: null,
+     _pendingEncoding: '',
+     parser: 
+      { _headers: [],
+        _url: '',
+        onHeaders: [Function: parserOnHeaders],
+        onHeadersComplete: [Function: parserOnHeadersComplete],
+        onBody: [Function: parserOnBody],
+        onMessageComplete: [Function: parserOnMessageComplete],
+        socket: [Circular],
+        incoming: [Circular],
+        maxHeaderPairs: 2000,
+        onIncoming: [Function: parserOnIncomingClient] },
+     _httpMessage: 
+      { domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        output: [],
+        outputEncodings: [],
+        writable: true,
+        _last: true,
+        chunkedEncoding: false,
+        shouldKeepAlive: true,
+        useChunkedEncodingByDefault: false,
+        sendDate: false,
+        _headerSent: true,
+        _header: 'GET /api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845 HTTP/1.1\r\nHost: upcdatabase.org\r\nConnection: keep-alive\r\n\r\n',
+        _hasBody: true,
+        _trailer: '',
+        finished: true,
+        _hangupClose: false,
+        socket: [Circular],
+        connection: [Circular],
+        agent: [Object],
+        socketPath: undefined,
+        method: 'GET',
+        path: '/api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845',
+        _headers: [Object],
+        _headerNames: [Object],
+        parser: [Object],
+        res: [Circular] },
+     ondata: [Function: socketOnData] },
+  connection: 
+   { _connecting: false,
+     _handle: 
+      { fd: 22,
+        writeQueueSize: 0,
+        owner: [Circular],
+        onread: [Function: onread],
+        reading: true },
+     _readableState: 
+      { highWaterMark: 16384,
+        buffer: [],
+        length: 0,
+        pipes: null,
+        pipesCount: 0,
+        flowing: false,
+        ended: false,
+        endEmitted: false,
+        reading: true,
+        calledRead: true,
+        sync: false,
+        needReadable: true,
+        emittedReadable: false,
+        readableListening: false,
+        objectMode: false,
+        defaultEncoding: 'utf8',
+        ranOut: false,
+        awaitDrain: 0,
+        readingMore: false,
+        decoder: null,
+        encoding: null },
+     readable: true,
+     domain: null,
+     _events: 
+      { end: [Object],
+        finish: [Function: onSocketFinish],
+        _socketEnd: [Function: onSocketEnd],
+        free: [Function],
+        close: [Object],
+        agentRemove: [Function],
+        drain: [Function: ondrain],
+        error: [Function: socketErrorListener] },
+     _maxListeners: 10,
+     _writableState: 
+      { highWaterMark: 16384,
+        objectMode: false,
+        needDrain: false,
+        ending: false,
+        ended: false,
+        finished: false,
+        decodeStrings: false,
+        defaultEncoding: 'utf8',
+        length: 0,
+        writing: false,
+        sync: false,
+        bufferProcessing: false,
+        onwrite: [Function],
+        writecb: null,
+        writelen: 0,
+        buffer: [] },
+     writable: true,
+     allowHalfOpen: false,
+     onend: [Function: socketOnEnd],
+     destroyed: false,
+     errorEmitted: false,
+     bytesRead: 546,
+     _bytesDispatched: 120,
+     _pendingData: null,
+     _pendingEncoding: '',
+     parser: 
+      { _headers: [],
+        _url: '',
+        onHeaders: [Function: parserOnHeaders],
+        onHeadersComplete: [Function: parserOnHeadersComplete],
+        onBody: [Function: parserOnBody],
+        onMessageComplete: [Function: parserOnMessageComplete],
+        socket: [Circular],
+        incoming: [Circular],
+        maxHeaderPairs: 2000,
+        onIncoming: [Function: parserOnIncomingClient] },
+     _httpMessage: 
+      { domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        output: [],
+        outputEncodings: [],
+        writable: true,
+        _last: true,
+        chunkedEncoding: false,
+        shouldKeepAlive: true,
+        useChunkedEncodingByDefault: false,
+        sendDate: false,
+        _headerSent: true,
+        _header: 'GET /api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845 HTTP/1.1\r\nHost: upcdatabase.org\r\nConnection: keep-alive\r\n\r\n',
+        _hasBody: true,
+        _trailer: '',
+        finished: true,
+        _hangupClose: false,
+        socket: [Circular],
+        connection: [Circular],
+        agent: [Object],
+        socketPath: undefined,
+        method: 'GET',
+        path: '/api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845',
+        _headers: [Object],
+        _headerNames: [Object],
+        parser: [Object],
+        res: [Circular] },
+     ondata: [Function: socketOnData] },
+  httpVersion: '1.1',
+  complete: false,
+  headers: 
+   { date: 'Mon, 14 Apr 2014 14:30:50 GMT',
+     server: 'Apache',
+     expires: 'Thu, 19 Nov 1981 08:52:00 GMT',
+     'cache-control': 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+     pragma: 'no-cache',
+     'set-cookie': [ 'PHPSESSID=b4d7f20340e5468616a8e90e397520b7; path=/' ],
+     'keep-alive': 'timeout=2, max=100',
+     connection: 'Keep-Alive',
+     'transfer-encoding': 'chunked',
+     'content-type': 'application/json' },
+  trailers: {},
+  _pendings: [],
+  _pendingIndex: 0,
+  url: '',
+  method: null,
+  statusCode: 200,
+  client: 
+   { _connecting: false,
+     _handle: 
+      { fd: 22,
+        writeQueueSize: 0,
+        owner: [Circular],
+        onread: [Function: onread],
+        reading: true },
+     _readableState: 
+      { highWaterMark: 16384,
+        buffer: [],
+        length: 0,
+        pipes: null,
+        pipesCount: 0,
+        flowing: false,
+        ended: false,
+        endEmitted: false,
+        reading: true,
+        calledRead: true,
+        sync: false,
+        needReadable: true,
+        emittedReadable: false,
+        readableListening: false,
+        objectMode: false,
+        defaultEncoding: 'utf8',
+        ranOut: false,
+        awaitDrain: 0,
+        readingMore: false,
+        decoder: null,
+        encoding: null },
+     readable: true,
+     domain: null,
+     _events: 
+      { end: [Object],
+        finish: [Function: onSocketFinish],
+        _socketEnd: [Function: onSocketEnd],
+        free: [Function],
+        close: [Object],
+        agentRemove: [Function],
+        drain: [Function: ondrain],
+        error: [Function: socketErrorListener] },
+     _maxListeners: 10,
+     _writableState: 
+      { highWaterMark: 16384,
+        objectMode: false,
+        needDrain: false,
+        ending: false,
+        ended: false,
+        finished: false,
+        decodeStrings: false,
+        defaultEncoding: 'utf8',
+        length: 0,
+        writing: false,
+        sync: false,
+        bufferProcessing: false,
+        onwrite: [Function],
+        writecb: null,
+        writelen: 0,
+        buffer: [] },
+     writable: true,
+     allowHalfOpen: false,
+     onend: [Function: socketOnEnd],
+     destroyed: false,
+     errorEmitted: false,
+     bytesRead: 546,
+     _bytesDispatched: 120,
+     _pendingData: null,
+     _pendingEncoding: '',
+     parser: 
+      { _headers: [],
+        _url: '',
+        onHeaders: [Function: parserOnHeaders],
+        onHeadersComplete: [Function: parserOnHeadersComplete],
+        onBody: [Function: parserOnBody],
+        onMessageComplete: [Function: parserOnMessageComplete],
+        socket: [Circular],
+        incoming: [Circular],
+        maxHeaderPairs: 2000,
+        onIncoming: [Function: parserOnIncomingClient] },
+     _httpMessage: 
+      { domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        output: [],
+        outputEncodings: [],
+        writable: true,
+        _last: true,
+        chunkedEncoding: false,
+        shouldKeepAlive: true,
+        useChunkedEncodingByDefault: false,
+        sendDate: false,
+        _headerSent: true,
+        _header: 'GET /api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845 HTTP/1.1\r\nHost: upcdatabase.org\r\nConnection: keep-alive\r\n\r\n',
+        _hasBody: true,
+        _trailer: '',
+        finished: true,
+        _hangupClose: false,
+        socket: [Circular],
+        connection: [Circular],
+        agent: [Object],
+        socketPath: undefined,
+        method: 'GET',
+        path: '/api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845',
+        _headers: [Object],
+        _headerNames: [Object],
+        parser: [Object],
+        res: [Circular] },
+     ondata: [Function: socketOnData] },
+  _consuming: false,
+  _dumped: false,
+  httpVersionMajor: 1,
+  httpVersionMinor: 1,
+  upgrade: false,
+  req: 
+   { domain: null,
+     _events: { error: [Function] },
+     _maxListeners: 10,
+     output: [],
+     outputEncodings: [],
+     writable: true,
+     _last: true,
+     chunkedEncoding: false,
+     shouldKeepAlive: true,
+     useChunkedEncodingByDefault: false,
+     sendDate: false,
+     _headerSent: true,
+     _header: 'GET /api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845 HTTP/1.1\r\nHost: upcdatabase.org\r\nConnection: keep-alive\r\n\r\n',
+     _hasBody: true,
+     _trailer: '',
+     finished: true,
+     _hangupClose: false,
+     socket: 
+      { _connecting: false,
+        _handle: [Object],
+        _readableState: [Object],
+        readable: true,
+        domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        _writableState: [Object],
+        writable: true,
+        allowHalfOpen: false,
+        onend: [Function: socketOnEnd],
+        destroyed: false,
+        errorEmitted: false,
+        bytesRead: 546,
+        _bytesDispatched: 120,
+        _pendingData: null,
+        _pendingEncoding: '',
+        parser: [Object],
+        _httpMessage: [Circular],
+        ondata: [Function: socketOnData] },
+     connection: 
+      { _connecting: false,
+        _handle: [Object],
+        _readableState: [Object],
+        readable: true,
+        domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        _writableState: [Object],
+        writable: true,
+        allowHalfOpen: false,
+        onend: [Function: socketOnEnd],
+        destroyed: false,
+        errorEmitted: false,
+        bytesRead: 546,
+        _bytesDispatched: 120,
+        _pendingData: null,
+        _pendingEncoding: '',
+        parser: [Object],
+        _httpMessage: [Circular],
+        ondata: [Function: socketOnData] },
+     agent: 
+      { domain: null,
+        _events: [Object],
+        _maxListeners: 10,
+        options: {},
+        requests: {},
+        sockets: [Object],
+        maxSockets: 5,
+        createConnection: [Function] },
+     socketPath: undefined,
+     method: 'GET',
+     path: '/api/json/b5c16ab4a289f6bb9b462a99802d996d/4006040023845',
+     _headers: { host: 'upcdatabase.org' },
+     _headerNames: { host: 'Host' },
+     parser: 
+      { _headers: [],
+        _url: '',
+        onHeaders: [Function: parserOnHeaders],
+        onHeadersComplete: [Function: parserOnHeadersComplete],
+        onBody: [Function: parserOnBody],
+        onMessageComplete: [Function: parserOnMessageComplete],
+        socket: [Object],
+        incoming: [Circular],
+        maxHeaderPairs: 2000,
+        onIncoming: [Function: parserOnIncomingClient] },
+     res: [Circular] } }
+##########################################################################################
+
+
+Execution Time (2014-04-14 14:30:30 UTC)
+concurrent:server   7.1s  ▇▇▇▇▇▇▇▇▇▇▇ 25%
+autoprefixer:dist  499ms  ▇ 2%
+express:dev        745ms  ▇▇ 3%
+watch              20.4s  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 70%
+Total 28.9s
+[31mStopping[39m Express server

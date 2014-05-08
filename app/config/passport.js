@@ -1,10 +1,12 @@
 'use strict';
 
 // load all the things we need
-var LocalStrategy   = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var BearerStrategy = require('passport-http-bearer').Strategy;
+var LocalStrategy   = require('passport-local').Strategy,
+FacebookStrategy = require('passport-facebook').Strategy,
+ GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+BearerStrategy = require('passport-http-bearer').Strategy,
+LocalAPIKeyStrategy = require('passport-localapikey').Strategy;
+var tList = require('../scripts/utility/token_list');
 
 // load up the user model
 //var User			= require('../../lib/models/user');
@@ -54,13 +56,22 @@ module.exports = function(passport,db) {
 			console.log('facebook strategy');
 			// find the user in the database based on their facebook id
             /*console.log("facebook strategy profile")*/
-            console.log(profile);
+            //console.log(profile);
 	        User.methods.findFb( profile.id , function(err, user) {
+                
 
 				// if there is an error, stop everything and return that
 				// ie an error connecting to the database
 	            if (err)
 	                return done(err);
+                var token = new require('../scripts/utility/token').token;
+                console.log('required token');
+                console.log(token);
+                var Token = new token(profile,'facebook');
+                console.log('created token');
+                tList.addToken(Token);
+                console.log('active token: '+tList.countToken());
+                
 
 				// if the user is found, then log them in
 	            if (user) {
@@ -88,6 +99,13 @@ module.exports = function(passport,db) {
                         else{
                            /* console.log('callback create user')
                             console.log(newUser)*/
+                            var token = new require('../scripts/utility/token').token;
+                            console.log('required token');
+                            console.log(token);
+                            var Token = new token(newUser);
+                            console.log('created token');
+                            tList.addToken(Token);
+                            console.log('active token: '+tList.countToken());
                         }
                     })
 	                /*newUser.facebook.id    = profile.id; // set the users facebook id	                
@@ -104,10 +122,21 @@ module.exports = function(passport,db) {
 
     }));
     // =========================================================================
-    // bearer===================================================================
+    // localapikey===================================================================
     // =========================================================================
     
-    passport.use('api-login',new BearerStrategy({},function(token,done){}))
+   passport.use(new LocalAPIKeyStrategy(
+  function(apikey, done) {
+      var User = new user(db);
+      console.log('apikey')
+      console.log(apikey);
+    User.findOne({ apikey: apikey }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
     // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================
@@ -165,15 +194,19 @@ module.exports = function(passport,db) {
         passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },function(req, email, password, done){
+        var User = new user(db);
 		User.methods.findOne(email,function(err,user){
             console.log('callback findone in passport')
             console.log(user)
             console.log('password')
             console.log("user_id")
-            var our_token 
-            User.methods.set_token(function(token){console.log("created token:");
-                                                   console.log(token);
-                                                  })
+            var token = require('../scripts/utility/token').token;
+            var Token = new token(user,'local');
+            console.log('required token');
+            console.log(token);
+            console.log('created token');
+            tList.addToken(Token);
+            console.log("active tokens: "+ tList.countToken())
 			if (err){
 				return done(err);
                 console.log('findone error')

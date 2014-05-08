@@ -16,7 +16,54 @@ module.exports = function(app, passport,neo,db) {
 		// render the page and pass in any flash data if it exists
 		res.render('login.ejs', { message: 'introduci le tue credenziali' }); 
 	});
-
+    app.post('/api_login',
+             function(req,res,next){
+                 console.log('api_login in routes')
+                 //console.log(req.body);
+                 var user = require('../lib/models/neo4j').user,
+                User = new user(db),
+                email = req.body.email,
+                password  = req.body.password,
+                tList = require('./scripts/utility/token_list');
+                 
+                 User.methods.findOne(email,function(err,user){
+                     console.log('found user')
+                     var token = require('./scripts/utility/token').token,
+                      Token;
+                     var valid = User.methods.validPassword(password)
+                     if (valid){
+                          Token = new token(user,'api-local');
+                         console.log('created token');
+                         tList.addToken(Token);
+                         console.log('token added');
+                         res.json({token:Token.get_token()})
+                     }
+                 })
+                 console.log(email,password),
+                     bcrypt = require('bcrypt-nodejs'),
+                     cryptedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+                 console.log('password: '+cryptedPassword);
+                res.send(req.user); 
+             });
+    app.post('/api_login_recover',function(req, res, next) {
+        console.log('prima callback')
+  passport.authenticate('api-login', function(err, user, token) { // funzione invocata da passport come done
+      console.log("done  callback")
+      console.log('user');
+      console.log(user);
+      console.log('token')
+      console.log(token)
+      res.json({token:token})
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+  })(req, res, next);
+});
+    app.post('/api_authenticate', 
+  passport.authenticate('localapikey', { failureRedirect: '/api/unauthorized' }),
+  function(req, res) {
+      console.log('route apikey')
+    res.json({ message: "Authenticated" })
+  });
 	// process the login form
 	app.post('/login', passport.authenticate('local-login', {
         failureFlash: 'Invalid username or password.',
@@ -90,6 +137,34 @@ module.exports = function(app, passport,neo,db) {
 		req.logout();
 		res.redirect('/');
 	});
+ 
+	// =====================================
+	// API_AUTHENTICATION ==============================
+	//   
+    app.post('/api_authentication',function(req,res){
+        console.log(req.body)
+        var token = require('./scripts/utility/token').token,
+            email = req.body.email,
+            password = req.body.password,
+            user = require('../lib/models/neo4j').user,
+            User = new user(db);
+        User.methods.findOne(email,function(err,user){
+            if (err) throw err;
+            else{
+                    
+                    
+                    if(User.methods.validPassword(password)){
+                        console.log('password ok')
+                        var tList = require('./scripts/utility/token_list'),
+                            token = require('./scripts/utility/token').token,
+                            Token = new token(user,'api_local')
+                        res.json({token:Token.get_token()})
+                        
+                        console.log('done')}
+            }
+        })
+        
+    })
 
 	// =====================================
 	// LOOKING_ITEM ==============================

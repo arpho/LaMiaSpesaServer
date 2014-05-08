@@ -16,9 +16,12 @@ estrae il prezzo dalla stringa upc
 }
 exports.route = function(req,res,db){
     var upc = req.query.upc,
+        token = req.query.token,
+        tList = require('../utility/token_list'),
         toInsert = req.query.toInsert,
     store = upc.substr(1,2),
         price = upc.substr(7);
+    if (tList.isValid(token)){
     if (toInsert){
         var query = [
             "create (i:lms_item:lms_weighed ",
@@ -44,5 +47,7 @@ exports.route = function(req,res,db){
     else{
         console.log("item not stored");
         res.json({message:'request processed',error:0,upc:upc,store:store,price:priceExtractor(price)});}
-    
+}
+    else {console.log('no valid token'); //eof tList.isValid(token)
+          res.send(401)}
 };

@@ -12,7 +12,8 @@
     "connect-cache-control": "~0.1.0",
     "crypto": "0.0.3",
     "passport-http-bearer": "~1.0.1",
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "passport-localapikey": "0.0.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -48,7 +49,8 @@
     "grunt-karma": "~0.8.2",
     "karma": "~0.12.6",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "tap": "~0.4.8"
+    "tap": "~0.4.8",
+    "assert": "~1.1.1"
   },
   "engines": {
     "node": ">=0.8.0"

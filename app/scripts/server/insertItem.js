@@ -24,6 +24,7 @@ module.exports = function(req,res,result,db){
                               .createHash("md5")
                               .update(imageUrl)
                               .digest("hex")+'.'+ imageUrl.slice(-3);  // aggiungo l'estensione del file
+                        console.log(imageUrl);
                         console.info('immagine: '+imageName);
                             var http = require('http'),
                             fs = require('fs'),
