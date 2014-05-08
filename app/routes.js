@@ -159,6 +159,7 @@ module.exports = function(app, passport,neo,db) {
                             token = require('./scripts/utility/token').token,
                             Token = new token(user,'api_local')
                         res.json({token:Token.get_token()})
+                        tList.addToken(Token);
                         
                         console.log('done')}
             }

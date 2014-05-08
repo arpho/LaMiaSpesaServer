@@ -14,9 +14,18 @@ var priceExtractor = function(upc){
     return price;
 }
 var test = require('tap').test;
-var request = require('superagent');
-test('broccoletti esse ',function(t){
-    var url = "http://localhost:8080/get_weighed?upc=2047960000822";
+var  url = "http://localhost:8080/api_authentication",
+        token,
+    request = require('superagent');
+    request.post(url).send("email=damicogiuseppe77@gmail.com").send("password=vilu7240").end(function(res){
+    //console.log('the server sent')
+    if (res.ok) {
+        token = res.body.token;
+        console.log('login')
+        console.log('token received: '+token )
+        url = "http://localhost:8080/get_item?upc=7313468675004&token="+token;
+        test('broccoletti esse ',function(t){
+    var url = "http://localhost:8080/get_weighed?upc=2047960000822&token="+token;
     request.get(url).end(function(err,res){
         t.equal(res.body.error,0,"no errori");
         t.equal(res.body.upc,"2047960000822","upc");
@@ -26,7 +35,7 @@ test('broccoletti esse ',function(t){
     })
 });
 test('cipollotti bianchi esse ',function(t){
-    var url = "http://localhost:8080/get_weighed?upc=2047460000391";
+    var url = "http://localhost:8080/get_weighed?upc=2047460000391&token="+token;
     request.get(url).end(function(err,res){
         t.equal(res.body.error,0,"no errori");
         //t.equal(res.body.upc,"2047960000822","upc");
@@ -35,8 +44,9 @@ test('cipollotti bianchi esse ',function(t){
         t.end();
     })
 });
+        
 test('banane esse ',function(t){
-    var url = "http://localhost:8080/get_weighed?upc=2044760002858";
+    var url = "http://localhost:8080/get_weighed?upc=2044760002858&token="+token;
     request.get(url).end(function(err,res){
         console.log('res.body');
         console.log(res.body);
@@ -48,7 +58,7 @@ test('banane esse ',function(t){
     })
 });
 test('noci cocco esse ',function(t){
-    var url = "http://localhost:8080/get_weighed?upc=2045090001030";
+    var url = "http://localhost:8080/get_weighed?upc=2045090001030&token="+token;
     request.get(url).end(function(err,res){
         console.log('res.body');
         console.log(res.body);
@@ -60,7 +70,7 @@ test('noci cocco esse ',function(t){
     })
 });
 test('ananas ',function(t){
-    var url = "http://localhost:8080/get_weighed?upc=2130057002820";
+    var url = "http://localhost:8080/get_weighed?upc=2130057002820&token="+token;
     request.get(url).end(function(err,res){
         console.log('res.body');
         console.log(res.body);
@@ -71,7 +81,6 @@ test('ananas ',function(t){
         t.end();
     })
 });
-
 test("testing priceExtractor",function(t){
     t.equal(priceExtractor('000822'),0.82,'full price');
     t.equal(priceExtractor('00100'),1,'unità');
@@ -79,6 +88,17 @@ test("testing priceExtractor",function(t){
     t.equal(priceExtractor('10000'),100,'centinaia');
     t.end();
 })
+        
+     } else {
+       console.log('Oh no! error ' + res.text);
+     }
+});
+var request = require('superagent');
+
+
+
+
+
 
 /*
 test('ananas ',function(t){

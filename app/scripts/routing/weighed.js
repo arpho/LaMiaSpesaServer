@@ -48,6 +48,6 @@ exports.route = function(req,res,db){
         console.log("item not stored");
         res.json({message:'request processed',error:0,upc:upc,store:store,price:priceExtractor(price)});}
 }
-    else {console.log('no valid token'); //eof tList.isValid(token)
+    else {console.log('weighed no valid token'); //eof tList.isValid(token)
           res.send(401)}
 };
