@@ -19,6 +19,7 @@ module.exports = function(app, passport,neo,db) {
     app.post('/api_login',
              function(req,res,next){
                  console.log('api_login in routes')
+                 console.log(req.session);
                  //console.log(req.body);
                  var user = require('../lib/models/neo4j').user,
                 User = new user(db),
@@ -62,6 +63,7 @@ module.exports = function(app, passport,neo,db) {
   passport.authenticate('localapikey', { failureRedirect: '/api/unauthorized' }),
   function(req, res) {
       console.log('route apikey')
+      console.log(req.session);
     res.json({ message: "Authenticated" })
   });
 	// process the login form
@@ -70,7 +72,7 @@ module.exports = function(app, passport,neo,db) {
         successFlash: 'Welcome!',
 		successRedirect : '/profile', // redirect to the secure profile section
 		failureRedirect : '/login', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
+		failureFlash : false // allow flash messages
 	}));
 	// =====================================
 	// SIGNUP ==============================
@@ -86,7 +88,7 @@ module.exports = function(app, passport,neo,db) {
 	app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : '/profile', // redirect to the secure profile section
 		failureRedirect : '/signup', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
+		failureFlash : false // allow flash messages
 	}));
 
 	// =====================================
@@ -95,6 +97,8 @@ module.exports = function(app, passport,neo,db) {
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
 	app.get('/profile', isLoggedIn, function(req, res) {
+        
+        console.log(req.session);
 		res.render('profile.ejs', {
 			user : req.user // get the user out of session and pass to template
 		});

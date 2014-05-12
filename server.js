@@ -6,6 +6,8 @@ var express = require('express'),
     path = require('path'),
     fs = require('fs');
 var passport = require('passport');
+//var RedisStore = require('connect-redis')(express);
+var session = require('express-session') , RedisStore = require('connect-redis')(session);
 var neo = require('neo4j');
 //var db = new neo.GraphDatabase('http://localhost:7474');
 //var db = new neo4j.GraphDatabase('http://localhost:7474');
@@ -41,6 +43,14 @@ app.configure(function(){
 
 	// required for passport
 	app.use(flash()); // use connect-flash for flash messages stored in session
+    app.use(express.session({ store: new RedisStore({
+          host:'127.0.0.1',
+          port:6380,
+          prefix:'sess'
+        }), secret: 'SEKR37',
+        cookie: { expires : new Date(Date.now() + 60*60*1000*48) } //2 days 
+    })
+    );
 	app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 	app.use(passport.initialize());
 	app.use(passport.session()); // persistent login sessions

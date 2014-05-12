@@ -159,7 +159,7 @@ module.exports = function(passport,db) {
                 console.log('mail già presente')
                 console.log(user);
 //                req.session.message('signupMessage', 'That email is already taken.')
-				return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+				return done(null, false);
             }
             else{
                 // create the user
@@ -213,11 +213,11 @@ module.exports = function(passport,db) {
 				}
 			if (!user)
 				{   console.log("findone no user")
-                    return done(null, false, req.flash('loginMessage', 'No user found.'));}
+                    return done(null, false);}
 			if (!User.methods.validPassword(password))
 				{   console.log("findone si user")
                     console.log("user")
-                    return done(null, false, req.flash('wrong password'));}
+                    return done(null, false);}
 			// all is well, return successful user
             return done(null, user);
 

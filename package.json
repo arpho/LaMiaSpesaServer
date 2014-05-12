@@ -13,7 +13,9 @@
     "crypto": "0.0.3",
     "passport-http-bearer": "~1.0.1",
     "node-uuid": "~1.4.1",
-    "passport-localapikey": "0.0.3"
+    "passport-localapikey": "0.0.3",
+    "connect-redis": "~2.0.0",
+    "express-session": "~1.0.4"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
