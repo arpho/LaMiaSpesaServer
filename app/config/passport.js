@@ -197,7 +197,7 @@ module.exports = function(passport,db) {
         var User = new user(db);
 		User.methods.findOne(email,function(err,user){
             console.log('callback findone in passport')
-            console.log(user)
+            console.log(user.email)
             console.log('password')
             console.log("user_id")
             var token = require('../scripts/utility/token').token;

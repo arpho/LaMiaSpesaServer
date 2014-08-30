@@ -1,24 +1,32 @@
 
-exports.route2 = function(req,res,db){
+exports.route2 = function(req,res,db,tList){
         console.log('***********************************************************************************************');
         console.log(new Date());
         console.log('new request');
         
 		var upc_number = req.query.upc,
-        token = req.query.token,
-        tList = require('../utility/token_list');
-        console.log('richiesta')
-        console.log(req.query)
+        token = req.query.token;
         console.log('token ricevuto:'+token)
         console.log('upc cercato: '+upc_number);
         if(tList.isValid(token)){
+            if (req.user){
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                consaole.log("user is logged")
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            }
+            else{
+                console.log('#######################################################################################')
+                console.log('user not logged')
+                console.log('################################################################################')
+            }
                 console.log('get_item valid token')
                 console.log('looking for: '+upc_number);
                 var query = [
                 'MATCH (i:lms_item)',
                 'WHERE i.number  = {upc}',
-                'RETURN i'
+                'RETURN i,id(i) as id'
             ].join('\n');
+            console.log(query);
                 var params = {upc:upc_number};
             //cerchiamo lo item nel db
             db.query(query,params,function(err,item){
@@ -27,9 +35,10 @@ exports.route2 = function(req,res,db){
                     throw err;}
                 else{
                     console.info('callback query db item');
-                    console.info(item);
+                    //console.info(item);
                     if (item.length>0){
                         var Item = item[0].i._data.data;
+                        Item.id = item[0].id
                         console.log('item in db');
                         console.log(Item);
                     var query = "MATCH (i:lms_item{number:'"+upc_number+"'})-[lms_visualizes]-(p:lms_picture) RETURN p";
@@ -48,11 +57,9 @@ exports.route2 = function(req,res,db){
                                     if(pics.length>0){
                                         //console.log(pics.data[0].data.name);
                                         //res.send(pics);
-                                        console.log('pics[0].p._data.data.name');
                                         //console.log(pics);
                                         //console.log(pics[0]);
                                         //console.log(pics[0].p);
-                                        console.log(pics[0].p._data.data.name);
                                         //Item.pictures = pics.data[0].data.name;
                                         //Item = item.data[0].data;
                                           Item.pictures = pics[0].p._data.data.name;
@@ -60,7 +67,13 @@ exports.route2 = function(req,res,db){
                                         console.log('item returned');
                                         Item.return_code ='0';
                                         console.log(Item);
-                                        res.json(Item);
+                                        try{
+                                        var tok = tList.rinnovaToken(token);
+                                        }
+                                        catch(err){
+                                            res.send(401) //token non valido non si dovrebbe arrivare qui ma durante lo sviluppo mi serviva
+                                        }
+                                        res.json({data:Item,token:tok.get_token()});
                                         console.log('item found in our db with picture');
                                         console.log('***********************************************************************************************');
 

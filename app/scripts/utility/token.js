@@ -9,7 +9,7 @@ module.exports.token = function(user,type){
     this.user = user;
     this.valid = true;
     this.token = uuid.v4();
-    this.timeout = new Date().setTime(new Date().getTime() +2*60*60*1000); // setto un timeout di due ore
+    this.timeout = new Date().setTime(new Date().getTime() +24*60*60*1000); // setto un timeout di 24 ore
     this.getType = function(){return self.type;}
     this.isValid = function(){
     if (new Date().getTime()< self.timeout) return true;

@@ -1,10 +1,11 @@
 'use strict';
-/*è un singletone, unico per tutta l'appicazione e va semplicemente required
-i tokens sono memorizzati in un dizionario conchiave il valore del token ogni due ore vengono rimossi i token scaduti*/
+/*è un singletone, unico per tutti i moduli che lo invocano con lo stesso path  e va semplicemente required
+i tokens sono memorizzati in un dizionario con chiave il valore del token ogni 24 ore vengono rimossi i token scaduti*/
 var tokens = {}; 
 module.exports.addToken = function(t) {
-    console.log('adding token');
+    console.log('adding token '+t.get_token());
 tokens[t.get_token()] = t;
+    console.log("TOKEN added ="+(undefined!=typeof(tokens[t.get_token()])))
 
 };
 module.exports.findByToken = function(token,next){
@@ -29,6 +30,7 @@ module.exports.countToken =  function(){
     return countProperty(tokens);
 }
 module.exports.isValid = function(t){
+    console.log("verifico validità di: "+t)
     var valid = false,
     tok = tokens[t];
     if(typeof(tok)=='undefined') return false;
@@ -43,6 +45,23 @@ var clean = function(){
         }
     }
 };
-//pulisco loa lista di token ogni due ore 
-setInterval(clean,2*60*60*1000); 
+
+var removeToken = function(key){
+    var tok = tokens[key];
+    if(typeof(tok)!="undefined") delete tokens[key];
+    
+}
+var rinnovaToken = function(tok){
+    console.log("rinnovo il token "+tok)
+    var oldToken = tokens[tok];
+    if("undefined"==typeof(oldToken)) throw "token non presente"
+    var token = require('./token').token
+    var newToken = new token(oldToken.get_user(),oldToken.getType())
+    this.addToken(newToken);
+    return  newToken;
+}
+module.exports.rinnovaToken = rinnovaToken;
+module.exports.removeToken = removeToken;
+//pulisco loa lista di token ogni 24 ore 
+(clean,24*60*60*1000); 
 module.exports.clean = clean;

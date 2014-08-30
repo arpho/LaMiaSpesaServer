@@ -21,7 +21,7 @@ exports.route = function(req,res,db){
         toInsert = req.query.toInsert,
     store = upc.substr(1,2),
         price = upc.substr(7);
-    if (tList.isValid(token)){
+    if (true/*tList.isValid(token)*/){
     if (toInsert){
         var query = [
             "create (i:lms_item:lms_weighed ",

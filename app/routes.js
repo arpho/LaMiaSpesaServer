@@ -1,4 +1,5 @@
 module.exports = function(app, passport,neo,db) {
+    var tList = require('./scripts/utility/token_list') // perchè tutti moduli delrouting lavorino con la stessa lista di token la distribuisco a tutti da qua
 
 	// =====================================
 	// HOME PAGE (with login links) ========
@@ -6,6 +7,12 @@ module.exports = function(app, passport,neo,db) {
 	app.get('/', function(req, res) {
 		res.render('index.ejs'); // load the index.ejs file
 	});
+    app.get('/isAlive',function(req,res){
+        var token = req.query.token;
+        var alive = tList.isValid(token)
+        console.log("token "+token+" is alive "+alive )
+        res.json({result:alive});
+    })
 
 	// =====================================
 	// LOGIN ===============================
@@ -23,21 +30,21 @@ module.exports = function(app, passport,neo,db) {
                  //console.log(req.body);
                  var user = require('../lib/models/neo4j').user,
                 User = new user(db),
-                email = req.body.email,
-                password  = req.body.password,
+                email = req.query.username,
+                password  = req.query.password,
                 tList = require('./scripts/utility/token_list');
                  
                  User.methods.findOne(email,function(err,user){
                      console.log('found user')
                      var token = require('./scripts/utility/token').token,
                       Token;
-                     var valid = User.methods.validPassword(password)
                      if (valid){
                           Token = new token(user,'api-local');
+                         req.login(); // stabilisce una sessione
                          console.log('created token');
                          tList.addToken(Token);
                          console.log('token added');
-                         res.json({token:Token.get_token()})
+                         res.json({sessionToken:Token.get_token()})
                      }
                  })
                  console.log(email,password),
@@ -46,7 +53,7 @@ module.exports = function(app, passport,neo,db) {
                  console.log('password: '+cryptedPassword);
                 res.send(req.user); 
              });
-    app.post('/api_login_recover',function(req, res, next) {
+  /*  app.post('/api_login_recover',function(req, res, next) {
         console.log('prima callback')
   passport.authenticate('api-login', function(err, user, token) { // funzione invocata da passport come done
       console.log("done  callback")
@@ -58,7 +65,7 @@ module.exports = function(app, passport,neo,db) {
     if (err) { return next(err); }
     if (!user) { return res.redirect('/login'); }
   })(req, res, next);
-});
+});*/
     app.post('/api_authenticate', 
   passport.authenticate('localapikey', { failureRedirect: '/api/unauthorized' }),
   function(req, res) {
@@ -146,12 +153,14 @@ module.exports = function(app, passport,neo,db) {
 	// API_AUTHENTICATION ==============================
 	//   
     app.post('/api_authentication',function(req,res){
-        console.log(req.body)
+        console.log(req.query)
         var token = require('./scripts/utility/token').token,
-            email = req.body.email,
-            password = req.body.password,
+            email = req.query.email,
+            password = req.query.password,
             user = require('../lib/models/neo4j').user,
             User = new user(db);
+            console.log(email);
+        console.log(password);
         User.methods.findOne(email,function(err,user){
             if (err) throw err;
             else{
@@ -159,13 +168,17 @@ module.exports = function(app, passport,neo,db) {
                     
                     if(User.methods.validPassword(password)){
                         console.log('password ok')
-                        var tList = require('./scripts/utility/token_list'),
+                        var 
                             token = require('./scripts/utility/token').token,
                             Token = new token(user,'api_local')
-                        res.json({token:Token.get_token()})
+                        res.json({sesionToken:Token.get_token()})
                         tList.addToken(Token);
                         
                         console.log('done')}
+                else{
+                    console.log("not authorized routes.js 170")
+                    res.send(401);
+                }
             }
         })
         
@@ -176,7 +189,7 @@ module.exports = function(app, passport,neo,db) {
 	// =====================================
 	app.get('/get_weighed',function(req,res){require('./scripts/routing/weighed').route(req,res,db);});
 	app.get('/get_item',function(req,res){
-        require('./scripts/routing/get_item').route2(req,res,db);
+        require('./scripts/routing/get_item').route2(req,res,db,tList);
     });
 	app.get('/api/looking_item',function(req,res){ // just for testing and developement
 		//var upc_number = req.query.upc,
@@ -186,6 +199,10 @@ module.exports = function(app, passport,neo,db) {
 		//res.send(req);
 	});
 };
+module.exports.isTokenValid = function(t){
+    var tList = require('./scripts/utility/token_list')
+    return tList.isValid(t);
+}
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
